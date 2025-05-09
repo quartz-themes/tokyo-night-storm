@@ -1,5 +1,5 @@
 name: Deploy Quart Themes preview to GitHub Pages
- 
+
 on:
   workflow_dispatch:
   schedule:
@@ -7,16 +7,16 @@ on:
   push:
     branches:
       - v4
- 
+
 permissions:
   contents: write
   pages: write
   id-token: write
- 
+
 concurrency:
   group: "pages"
   cancel-in-progress: true
- 
+
 jobs:
   build:
     if: ${{ github.repository != 'quartz-themes/quartz-themes-preview-template' }}
@@ -35,7 +35,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config remote.template.url >&- || git remote add template https://github.com/quartz-themes/quartz-themes-preview-template.git
           git pull -X theirs template v4 --allow-unrelated-histories --no-edit
-          git push
+          git push || git push --force
       - name: Install Dependencies
         uses: nick-fields/retry@v3
         with:
@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
- 
+
   deploy:
     needs: build
     environment:
